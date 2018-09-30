@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"strconv"
 	"strings"
 )
 
@@ -19,39 +18,6 @@ type KeyAction struct {
 	Layer          int
 }
 
-// stringConverter is used to convert string values
-// into the desired types. We use this techniques to make error handling easier
-// when you need to convert multiple values in a row.
-// By holding the error value in a object we can make multiple convertions
-// and only check for errors at the end.
-type stringConverter struct {
-	err error
-}
-
-func (sc *stringConverter) toInt(text string) int {
-	result := 0
-
-	if sc.err != nil {
-		return result
-	}
-
-	result, sc.err = strconv.Atoi(text)
-
-	return result
-}
-
-func (sc *stringConverter) toBool(text string) bool {
-	result := false
-
-	if sc.err != nil {
-		return result
-	}
-
-	result, sc.err = strconv.ParseBool(text)
-
-	return result
-}
-
 // NewKeyAction serializes the input string into a KeyAction and returns it
 func NewKeyAction(input string) (*KeyAction, error) {
 	splitInput := strings.Split(input, ",")
@@ -59,7 +25,7 @@ func NewKeyAction(input string) (*KeyAction, error) {
 		return nil, errors.New("Invalid input. It should contain 7 fields")
 	}
 
-	converter := &stringConverter{}
+	converter := &StringConverter{}
 	keyAction := &KeyAction{}
 
 	keyAction.Keyboard = splitInput[0]
