@@ -10,9 +10,5 @@ CREATE TABLE keyactions (
   layer INTEGER
 );
 
-CREATE INDEX keyactions_index ON keyactions(timedate);
-
-CREATE TABLE keyaction_errors (
-  timedate INTEGER,
-  input TEXT
-);
+CREATE INDEX keyactions_time_index ON keyactions(timedate);
+CREATE INDEX keyactions_keyboard_index ON keyactions(keyboard);

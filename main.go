@@ -14,7 +14,7 @@ func main() {
 	}
 	defer db.Close()
 
-	// input := "atreus62,11,02,1,0,0,26642,0"
+	// input := "dactyl,11,02,1,0,0,26642,0"
 
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {

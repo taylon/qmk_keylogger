@@ -14,7 +14,7 @@ type DB struct {
 // NewDB creates a connection to the SQlite database and returns
 // a DB object that can interact with it the database
 func NewDB() (*DB, error) {
-	conn, err := sql.Open("sqlite3", "./keylogger.db")
+	conn, err := sql.Open("sqlite3", "/home/taylon/keylogger/database.db")
 	if err != nil {
 		return nil, err
 	}

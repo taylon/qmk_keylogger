@@ -1,6 +1,6 @@
 .PHONY: create_db
 
-DB_FILE=keylogger.db
+DB_FILE=$(HOME)/keylogger/database.db
 INIT_SQL_FILE=db.sql
 
 create_db:
