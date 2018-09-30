@@ -8,6 +8,8 @@ import (
 )
 
 func main() {
+	log.SetOutput(os.Stdout)
+
 	db, err := NewDB()
 	if err != nil {
 		log.Fatalf("Could not connect to the database: %s", err)
