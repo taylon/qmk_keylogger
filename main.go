@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bufio"
 	"log"
+	"os"
 	"time"
 )
 
@@ -12,23 +14,25 @@ func main() {
 	}
 	defer db.Close()
 
-	// reader := bufio.NewReader(os.Stdin)
+	// input := "atreus62,11,02,1,0,0,26642,0"
 
-	// for {
-	// text, _ := reader.ReadString('\n')
-	// atreus62: col=11, row=02, pressed=1, tap_count=0, tap_interrupted=0, keycode=26642, layer=0
-	// fmt.Printf("From keylogger: %s", input)
-	// }
-	input := "atreus62,11,02,1,0,0,26642,0"
+	scanner := bufio.NewScanner(os.Stdin)
+	for scanner.Scan() {
+		input := scanner.Text()
 
-	keyAction, err := NewKeyAction(input)
-	if err != nil {
-		log.Printf("Error when initializing KeyAction: %s", err)
-		return
+		keyAction, err := NewKeyAction(input)
+		if err != nil {
+			log.Printf("Error when initializing KeyAction: %s", err)
+			continue
+		}
+
+		err = db.InsertKeyAction(keyAction, time.Now().Unix())
+		if err != nil {
+			log.Printf("Could not insert keyaction into the database: %s", err)
+		}
 	}
 
-	err = db.InsertKeyAction(keyAction, time.Now().Unix())
-	if err != nil {
-		log.Printf("Could not insert keyaction into the database: %s", err)
+	if err := scanner.Err(); err != nil {
+		log.Fatalf("Failed when reading Stdin: %s", err)
 	}
 }
