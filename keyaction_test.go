@@ -15,7 +15,7 @@ func TestNewKeyPress(t *testing.T) {
 		Press:          true,
 		TapCount:       0,
 		TapInterrupted: false,
-		Keycode:        26,
+		KeyCode:        26,
 		Layer:          1,
 	}
 
@@ -26,7 +26,7 @@ func TestNewKeyPress(t *testing.T) {
 		expectedKeyAction.Press,
 		expectedKeyAction.TapCount,
 		expectedKeyAction.TapInterrupted,
-		expectedKeyAction.Keycode,
+		expectedKeyAction.KeyCode,
 		expectedKeyAction.Layer,
 	))
 

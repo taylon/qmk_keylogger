@@ -1,14 +1,14 @@
-CREATE TABLE keyactions (
-  timedate INTEGER,
-  keyboard TEXT,
-  column INTEGER,
+CREATE TABLE key_actions (
+  created_at INTEGER,
+  keyboard_name TEXT,
+  col INTEGER,
   row INTEGER,
   press INTEGER,
-  tapCount INTEGER,
-  tapInterrupted INTEGER,
-  keycode INTEGER,
+  tap_count INTEGER,
+  tap_interrupted INTEGER,
+  key_code INTEGER,
   layer INTEGER
 );
 
-CREATE INDEX keyactions_time_index ON keyactions(timedate);
-CREATE INDEX keyactions_keyboard_index ON keyactions(keyboard);
+CREATE INDEX key_actions_time_index ON key_actions(created_at);
+CREATE INDEX key_actions_keyboard_index ON key_actions(keyboard_name);

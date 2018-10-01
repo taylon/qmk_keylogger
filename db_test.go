@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/suite"
-	sqlmock "gopkg.in/DATA-DOG/go-sqlmock.v1"
+	"gopkg.in/DATA-DOG/go-sqlmock.v1"
 )
 
 type dbTestSuite struct {
@@ -40,7 +40,7 @@ func (s *dbTestSuite) TestInsertKeyAction() {
 	keyAction := &KeyAction{}
 	unixTime := time.Now().Unix()
 
-	s.sqlmock.ExpectExec("INSERT INTO keyactions").
+	s.sqlmock.ExpectExec("INSERT INTO key_actions").
 		WithArgs(
 			unixTime,
 			keyAction.Keyboard,
@@ -49,7 +49,7 @@ func (s *dbTestSuite) TestInsertKeyAction() {
 			keyAction.Press,
 			keyAction.TapCount,
 			keyAction.TapInterrupted,
-			keyAction.Keycode,
+			keyAction.KeyCode,
 			keyAction.Layer,
 		).
 		WillReturnResult(sqlmock.NewResult(1, 1))
@@ -61,7 +61,7 @@ func (s *dbTestSuite) TestInsertKeyAction() {
 }
 
 func (s *dbTestSuite) TestInsertKeyActionReturnsErrorWhenInsertFails() {
-	s.sqlmock.ExpectExec("INSERT INTO keyactions").WillReturnError(errors.New("error"))
+	s.sqlmock.ExpectExec("INSERT INTO key_actions").WillReturnError(errors.New("error"))
 
 	err := s.db.InsertKeyAction(&KeyAction{}, time.Now().Unix())
 

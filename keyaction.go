@@ -14,7 +14,7 @@ type KeyAction struct {
 	Press          bool
 	TapCount       int
 	TapInterrupted bool
-	Keycode        int
+	KeyCode        int
 	Layer          int
 }
 
@@ -22,7 +22,7 @@ type KeyAction struct {
 func NewKeyAction(input string) (*KeyAction, error) {
 	splitInput := strings.Split(input, ",")
 	if len(splitInput) != 8 {
-		return nil, errors.New("Invalid input. It should contain 7 fields")
+		return nil, errors.New("invalid input. It should contain 7 fields")
 	}
 
 	converter := &StringConverter{}
@@ -34,7 +34,7 @@ func NewKeyAction(input string) (*KeyAction, error) {
 	keyAction.Press = converter.toBool(splitInput[3])
 	keyAction.TapCount = converter.toInt(splitInput[4])
 	keyAction.TapInterrupted = converter.toBool(splitInput[5])
-	keyAction.Keycode = converter.toInt(splitInput[6])
+	keyAction.KeyCode = converter.toInt(splitInput[6])
 	keyAction.Layer = converter.toInt(splitInput[7])
 
 	if converter.err != nil {
