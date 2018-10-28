@@ -11,8 +11,8 @@ db:
 	@sqlite3 $(DB_FILE)
 
 test:
-	@go test -v -cover
+	@go test -v -cover -json | tparse -all
 
 run:
 	@go build
-	@sudo ./hid_listen | ./qmk_keylogger >> $(KEYLOGGER_FILES_PATH)/logs
+	@./qmk_keylogger >> $(KEYLOGGER_FILES_PATH)/logs

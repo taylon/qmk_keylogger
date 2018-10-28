@@ -5,7 +5,7 @@ import "strconv"
 // StringConverter is used to convert string values
 // into the desired types. We use this technique to make error handling easier
 // when you need to convert multiple values in a row.
-// By holding the error value in a object we can make multiple convertions
+// By holding the error value in a object we can make multiple conversions
 // and only check for errors at the end.
 type StringConverter struct {
 	err error
