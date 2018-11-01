@@ -1,7 +1,7 @@
 package main
 
 import (
-	"errors"
+	"fmt"
 	"strings"
 )
 
@@ -22,7 +22,7 @@ type KeyAction struct {
 func NewKeyAction(input string) (*KeyAction, error) {
 	splitInput := strings.Split(input, ",")
 	if len(splitInput) != 8 {
-		return nil, errors.New("invalid input. It should contain 7 fields")
+		return nil, fmt.Errorf("invalid input. It should contain 7 fields: %s", input)
 	}
 
 	converter := &StringConverter{}
