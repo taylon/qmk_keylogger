@@ -7,17 +7,18 @@ import (
 )
 
 func TestStringConverterToInt(t *testing.T) {
-	// Sucessfull call
+	// Successful call
 	converter := &StringConverter{}
 	converter.toInt("1")
 	converter.toInt("2")
-	result := converter.toInt("0")
-	assert.Equal(t, 0, result)
+
+	assert.Equal(t, 0, converter.toInt("0"))
 	assert.NoError(t, converter.err)
 
 	// Call with invalid input
 	converter = &StringConverter{}
 	converter.toInt("mx_browns_sucks")
+
 	assert.Error(t, converter.err)
 
 	// Call with two invalid calls and one valid
@@ -25,22 +26,23 @@ func TestStringConverterToInt(t *testing.T) {
 	converter.toInt("0")
 	converter.toInt("mx_browns_sucks")
 	converter.toInt("0")
+
 	assert.Error(t, converter.err)
 }
 
 func TestStringConverterToBool(t *testing.T) {
-	// Sucessfull call
+	// Successful call
 	converter := &StringConverter{}
 	converter.toBool("0")
-	resultFalse := converter.toBool("0")
-	resultTrue := converter.toBool("1")
-	assert.False(t, resultFalse)
-	assert.True(t, resultTrue)
+
+	assert.False(t, converter.toBool("0"))
+	assert.True(t, converter.toBool("1"))
 	assert.NoError(t, converter.err)
 
 	// Call with invalid input
 	converter = &StringConverter{}
 	converter.toBool("mx_browns_sucks")
+
 	assert.Error(t, converter.err)
 
 	// Call with two invalid calls and one valid
@@ -48,5 +50,6 @@ func TestStringConverterToBool(t *testing.T) {
 	converter.toBool("0")
 	converter.toBool("mx_browns_sucks")
 	converter.toBool("2")
+
 	assert.Error(t, converter.err)
 }
