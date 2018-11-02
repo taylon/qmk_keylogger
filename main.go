@@ -27,9 +27,6 @@ func watchForSystemSignals(db *DB) {
 	}()
 }
 
-// Looking at potential race conditions that are happening when the application is interrupted, need to better understand the
-// overall concurrency of the application, it is to confusing at this point...
-
 func main() {
 	log.SetOutput(os.Stdout)
 
