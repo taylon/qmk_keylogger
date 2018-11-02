@@ -46,7 +46,7 @@ func main() {
 		log.Fatalln("could not initialize hid_listen:", err)
 	}
 
-	err, hidListenErrChan := hidListen.Start()
+	hidListenErrChan, err := hidListen.Start()
 	if err != nil {
 		log.Fatalln("could not start hid_listen:", err)
 	}

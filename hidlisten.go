@@ -9,6 +9,10 @@ import (
 	"time"
 )
 
+const hidListenReadyLine = "Listening:\n"
+
+var ErrTimeout = errors.New("timed out while waiting for hid_listen to be ready")
+
 type HidListen struct {
 	cmd *exec.Cmd
 
@@ -38,45 +42,46 @@ func NewHidListen() (*HidListen, error) {
 
 // waitUntilReady reads the outputPipe looking for the "Listening" line that indicates that hid_listen is ready.
 // If it doesn't see it within a certain time frame it will timeout and return an error.
-func (h *HidListen) waitUntilReady() error {
+func (h *HidListen) waitUntilReady(waitLimit time.Duration) error {
 	reader := bufio.NewReader(h.StdOutputPipe)
 
-	timer := time.NewTimer(10 * time.Second)
+	timer := time.NewTimer(waitLimit)
 	defer timer.Stop()
 
-	isReady := make(chan bool)
-	var err error
+	isReadyChan := make(chan bool)
+	readErrChan := make(chan error)
 
 	go func() {
-		var line string
-
 		for {
 			// If this returns error nothing will ever be sent to the isReady channel and the error will
 			// be picked up bellow on the timeout block of the select statement
-			line, err = reader.ReadString('\n')
+			line, err := reader.ReadString('\n')
 			if err != nil {
+				readErrChan <- err
+
 				return
 			}
 
-			if line == "Listening:\n" {
-				isReady <- true
+			if line == hidListenReadyLine {
+				isReadyChan <- true
+
 				return
 			}
 		}
 	}()
 
+	var err error
+
 	select {
-	case <-isReady:
-		return nil
+	case <-isReadyChan:
+		err = nil
+	case readErr := <-readErrChan:
+		err = readErr
 	case <-timer.C:
-		timeoutMsg := "timed out while waiting for hid_listen to be ready"
-
-		if err != nil {
-			timeoutMsg = fmt.Sprintf("%s: %s", timeoutMsg, err)
-		}
-
-		return fmt.Errorf("%s", timeoutMsg)
+		err = ErrTimeout
 	}
+
+	return err
 }
 
 // wait waits for hid_listen to exit, which should never happen since we expect it to run forever.
@@ -102,22 +107,22 @@ func (h *HidListen) watchStdErr(errChan chan<- error) {
 // Start will start the HidListen.cmd command and wait until it is ready before returning.
 // It will return a error in case the command fails to start or get ready. It will also return
 // a channel that will receive errors that can happen after hid_listen starts running
-func (h *HidListen) Start() (error, <-chan error) {
+func (h *HidListen) Start() (<-chan error, error) {
 	errChan := make(chan error)
 
 	go h.watchStdErr(errChan)
 
 	err := h.cmd.Start()
 	if err != nil {
-		return fmt.Errorf("could not start hid_listen: %s", err), nil
+		return nil, fmt.Errorf("could not start hid_listen: %s", err)
 	}
 
-	err = h.waitUntilReady()
+	err = h.waitUntilReady(10 * time.Second)
 	if err != nil {
-		return err, nil
+		return nil, err
 	}
 
 	go h.wait(errChan)
 
-	return nil, errChan
+	return errChan, nil
 }
