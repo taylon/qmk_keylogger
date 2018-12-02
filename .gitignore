@@ -2,5 +2,6 @@ debug*
 
 qmk_keylogger
 *.db
+dev_tests
 
 .idea
