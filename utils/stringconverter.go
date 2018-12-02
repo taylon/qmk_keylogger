@@ -1,4 +1,4 @@
-package main
+package utils
 
 import "strconv"
 
@@ -8,29 +8,27 @@ import "strconv"
 // By holding the error value in a object we can make multiple conversions
 // and only check for errors at the end.
 type StringConverter struct {
-	err error
+	Error error
 }
 
-func (sc *StringConverter) toInt(text string) int {
-	result := 0
-
-	if sc.err != nil {
-		return result
+func (sc *StringConverter) ToInt(text string) int {
+	if sc.Error != nil {
+		return 0
 	}
 
-	result, sc.err = strconv.Atoi(text)
+	var result int
+	result, sc.Error = strconv.Atoi(text)
 
 	return result
 }
 
-func (sc *StringConverter) toBool(text string) bool {
-	result := false
-
-	if sc.err != nil {
-		return result
+func (sc *StringConverter) ToBool(text string) bool {
+	if sc.Error != nil {
+		return false
 	}
 
-	result, sc.err = strconv.ParseBool(text)
+	var result bool
+	result, sc.Error = strconv.ParseBool(text)
 
 	return result
 }

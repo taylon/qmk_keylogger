@@ -1,4 +1,4 @@
-package main
+package hidlisten
 
 import (
 	"io"

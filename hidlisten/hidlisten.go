@@ -1,4 +1,4 @@
-package main
+package hidlisten
 
 import (
 	"bufio"
@@ -20,8 +20,8 @@ type HidListen struct {
 	StdErrPipe    io.ReadCloser
 }
 
-func NewHidListen() (*HidListen, error) {
-	cmd := exec.Command("./hid_listen")
+func New() (*HidListen, error) {
+	cmd := exec.Command("hid_listen")
 
 	outputPipe, err := cmd.StdoutPipe()
 	if err != nil {
@@ -114,7 +114,7 @@ func (h *HidListen) Start() (<-chan error, error) {
 
 	err := h.cmd.Start()
 	if err != nil {
-		return nil, fmt.Errorf("could not start hid_listen: %s", err)
+		return nil, err
 	}
 
 	err = h.waitUntilReady(10 * time.Second)

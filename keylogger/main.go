@@ -7,9 +7,13 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/taylon/qmk_keylogger/db"
+	"github.com/taylon/qmk_keylogger/hidlisten"
+	"github.com/taylon/qmk_keylogger/keyaction"
 )
 
-func watchForSystemSignals(db *DB) {
+func watchForSystemSignals(db *db.DB) {
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 
@@ -30,15 +34,15 @@ func watchForSystemSignals(db *DB) {
 func main() {
 	log.SetOutput(os.Stdout)
 
-	db, err := NewDB()
+	listenerDB, err := db.New()
 	if err != nil {
 		log.Fatalln("could not connect to the database:", err)
 	}
-	defer db.Close()
+	defer listenerDB.Close()
 
-	watchForSystemSignals(db)
+	watchForSystemSignals(listenerDB)
 
-	hidListen, err := NewHidListen()
+	hidListen, err := hidlisten.New()
 	if err != nil {
 		log.Fatalln("could not initialize hid_listen:", err)
 	}
@@ -54,13 +58,13 @@ func main() {
 		for scanner.Scan() {
 			input := scanner.Text()
 
-			keyAction, err := NewKeyAction(input)
+			keyAction, err := keyaction.New(input)
 			if err != nil {
 				log.Printf("error when initializing KeyAction: %s", err)
 				continue
 			}
 
-			err = db.InsertKeyAction(keyAction, time.Now().Unix())
+			err = listenerDB.InsertKeyAction(keyAction, time.Now().Unix())
 			if err != nil {
 				log.Printf("could not insert keyaction into the database: %s", err)
 			}

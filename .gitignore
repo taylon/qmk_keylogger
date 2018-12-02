@@ -1,7 +1,5 @@
 debug*
-vendor
 
-hid_listen
 qmk_keylogger
 *.db
 

@@ -1,4 +1,4 @@
-package main
+package keyaction
 
 import (
 	"fmt"
@@ -19,7 +19,7 @@ func TestNewKeyPress(t *testing.T) {
 		Layer:          1,
 	}
 
-	KeyAction, _ := NewKeyAction(fmt.Sprintf("%s,%d,%d,%t,%d,%t,%d,%d",
+	KeyAction, _ := New(fmt.Sprintf("%s,%d,%d,%t,%d,%t,%d,%d",
 		expectedKeyAction.Keyboard,
 		expectedKeyAction.Column,
 		expectedKeyAction.Row,
@@ -35,14 +35,14 @@ func TestNewKeyPress(t *testing.T) {
 
 func TestNewKeyPressReturnsErrorWhenInvalidInput(t *testing.T) {
 	// Test an input that does not have at least 8 fields
-	_, err := NewKeyAction("mx_browns_sucks")
+	_, err := New("mx_browns_sucks")
 	assert.Error(t, err)
 
 	// Test an input that has 8 fields but is still invalid
-	_, err = NewKeyAction("zealios62!,zealios62!,zealios62!,zealios62!,zealios62!,zealios62!,zealios62!,zealios62!")
+	_, err = New("zealios62!,zealios62!,zealios62!,zealios62!,zealios62!,zealios62!,zealios62!,zealios62!")
 	assert.Error(t, err)
 
 	// Test an input that has 7 valid fields and one invalid
-	_, err = NewKeyAction("invalid,invalid,invalid,0,invalid,invalid,invalid,invalid")
+	_, err = New("invalid,invalid,invalid,0,invalid,invalid,invalid,invalid")
 	assert.Error(t, err)
 }

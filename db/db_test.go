@@ -1,4 +1,4 @@
-package main
+package db
 
 import (
 	"errors"
@@ -7,6 +7,8 @@ import (
 
 	"github.com/stretchr/testify/suite"
 	"gopkg.in/DATA-DOG/go-sqlmock.v1"
+
+	"github.com/taylon/qmk_keylogger/keyaction"
 )
 
 type dbTestSuite struct {
@@ -37,7 +39,7 @@ func (s *dbTestSuite) TearDownTest() {
 }
 
 func (s *dbTestSuite) TestInsertKeyAction() {
-	keyAction := &KeyAction{}
+	keyAction := &keyaction.KeyAction{}
 	unixTime := time.Now().Unix()
 
 	s.sqlmock.ExpectExec("INSERT INTO key_actions").
@@ -63,7 +65,7 @@ func (s *dbTestSuite) TestInsertKeyAction() {
 func (s *dbTestSuite) TestInsertKeyActionReturnsErrorWhenInsertFails() {
 	s.sqlmock.ExpectExec("INSERT INTO key_actions").WillReturnError(errors.New("error"))
 
-	err := s.db.InsertKeyAction(&KeyAction{}, time.Now().Unix())
+	err := s.db.InsertKeyAction(&keyaction.KeyAction{}, time.Now().Unix())
 
 	s.Error(err)
 	s.NoError(s.sqlmock.ExpectationsWereMet())
